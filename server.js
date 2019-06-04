@@ -1,15 +1,21 @@
 const mongoose = require('mongoose');
-const mail=require('../prototype/middleware/mail');
-// const uuid = require('uuid/v4')
-// const session = require('express-session')
-// const FileStore = require('session-file-store')(session);
+var admin = require("firebase-admin");
+const express = require('express');
+const app = express();
+//const mail=require('../prototype/middleware/mail');
+var bodyParser = require('body-parser');
+var serviceAccount = require('./service.json');
+app.use(bodyParser.urlencoded({ extended: false }));  
+
+
 
 const auth = require('./routes/auth');
 const users = require('./routes/users');
+const data = require('./routes/data');
 
-const express = require('express');
 
-const app = express();
+
+
 
 var url = process.env.DATABASEURL || 'mongodb://localhost/facecount';
 mongoose.connect(url);
@@ -30,10 +36,11 @@ app.use(function(req, res, next) {
   });
    
   // only apply to requests that begin with /user/
-  app.use('/user/', apiLimiter);
+//app.use('/user/', apiLimiter);
 app.use(express.json());
 app.use('/api/users', users,apiLimiter);
 app.use('/api/auth', auth,apiLimiter);
+app.use('/api/data', data,apiLimiter);
 
 const port = process.env.PORT || 3000;
 const id   = process.env.ID;
