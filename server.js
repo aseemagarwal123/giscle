@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-//const mail=require('../prototype/middleware/mail');
+const mail=require('../prototype/middleware/mail');
 // const uuid = require('uuid/v4')
 // const session = require('express-session')
 // const FileStore = require('session-file-store')(session);
@@ -11,11 +11,8 @@ const express = require('express');
 
 const app = express();
 
-var url = 'mongodb://suicide:giscle123@ds131747.mlab.com:31747/giscle';
-mongoose.connect(url, { useNewUrlParser: true },function(err){
-  if(err) throw err;
-  console.log("Connected");
-});
+var url = process.env.DATABASEURL || 'mongodb://localhost/facecount';
+mongoose.connect(url);
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
 
@@ -38,7 +35,7 @@ app.use(express.json());
 app.use('/api/users', users,apiLimiter);
 app.use('/api/auth', auth,apiLimiter);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 const id   = process.env.ID;
 
 
